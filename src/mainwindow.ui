@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>418</width>
+    <height>212</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>AreasCBB</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="one_tab">
+       <attribute name="title">
+        <string>Area from one VMRL</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="one_vrml_button">
+            <property name="text">
+             <string>Open ...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-open"/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="one_vrml_input">
+            <property name="placeholderText">
+             <string>input - VRML file</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="one_csv_button">
+            <property name="text">
+             <string>Save ...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-save"/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="one_csv_input">
+            <property name="placeholderText">
+             <string>ouput - CSV file </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="one_run_button">
+          <property name="text">
+           <string>Compute Areas</string>
+          </property>
+          <property name="icon">
+           <iconset theme="media-playback-start"/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="many_tab">
+       <attribute name="title">
+        <string>Area from many VMRLs</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="many_vrml_input">
+            <property name="placeholderText">
+             <string>Folder with many VRMLs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="many_csv_input">
+            <property name="placeholderText">
+             <string>Folder to save many CSVs </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="many_vrml_button">
+            <property name="text">
+             <string>Open Folder...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-open">
+              <normaloff/>
+             </iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="many_csv_button">
+            <property name="text">
+             <string>Save Folder...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-save">
+              <normaloff/>
+             </iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="many_run_button">
+          <property name="text">
+           <string>Compute Areas</string>
+          </property>
+          <property name="icon">
+           <iconset theme="media-playback-start"/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>418</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <action name="action_Quit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
