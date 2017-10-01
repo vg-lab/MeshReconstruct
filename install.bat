@@ -18,7 +18,7 @@ EXIT
 ) 
 
 echo @echo off > run.bat
-echo activate.bat areasCBB ^&^& python.exe %PWD%src\gui.py ^&^& deactivate >> run.bat
+echo activate.bat areasCBB ^&^& python.exe "%PWD%src\gui.py" ^&^& deactivate >> run.bat
 echo PAUSE >> run.bat
 
 echo.

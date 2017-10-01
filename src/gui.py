@@ -18,34 +18,60 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def connect_signals(self):
         self.one_vrml_button.clicked.connect(lambda: self.open_dialog(self.one_vrml_input, "*.vrml"))
-        self.one_csv_button.clicked.connect(lambda: self.save_dialog(self.one_csv_input, "*.csv"))
+        self.one_vrml_csv_button.clicked.connect(lambda: self.save_dialog(self.one_vrml_csv_input, "*.csv"))
         self.many_vrml_button.clicked.connect(lambda: self.open_dir_dialog(self.many_vrml_input))
-        self.many_csv_button.clicked.connect(lambda: self.open_dir_dialog(self.many_csv_input))
-        self.one_run_button.clicked.connect(lambda: self.run("one"))
-        self.many_run_button.clicked.connect(lambda: self.run("many"))
+        self.many_vrml_csv_button.clicked.connect(lambda: self.open_dir_dialog(self.many_vrml_csv_input))
+        self.one_vrml_run_button.clicked.connect(lambda: self.run("one_vrml"))
+        self.many_vrml_run_button.clicked.connect(lambda: self.run("many_vrml"))
+        self.one_imx_button.clicked.connect(lambda: self.open_dialog(self.one_imx_input, "*.imx"))
+        self.one_imx_csv_button.clicked.connect(lambda: self.save_dialog(self.one_imx_csv_input, "*.csv"))
+        self.many_imx_button.clicked.connect(lambda: self.open_dir_dialog(self.many_imx_input))
+        self.many_imx_csv_button.clicked.connect(lambda: self.open_dir_dialog(self.many_imx_csv_input))
+        self.one_imx_run_button.clicked.connect(lambda: self.run("one_imx"))
+        self.many_imx_run_button.clicked.connect(lambda: self.run("many_imx"))
 
     def run(self, kind):
         args = []
-        if kind == "one":
+
+        if kind == "one_vrml":
             if not os.path.isfile(self.one_vrml_input.text()):
                 self.one_vrml_input.setFocus()
                 return
-            if self.one_csv_input.text() == "":
-                self.one_csv_input.setFocus()
+            if self.one_vrml_csv_input.text() == "":
+                self.one_vrml_csv_input.setFocus()
                 return
+            args = ["-a", "{}".format(self.one_vrml_csv_input.text()),
+                    "-v", "{}".format(self.one_vrml_input.text())]
 
-            args = ["-a", "{}".format(self.one_csv_input.text()),
-                    "-i", "{}".format(self.one_vrml_input.text())]
-        if kind == "many":
+        if kind == "many_vrml":
             if not os.path.isdir(self.many_vrml_input.text()):
                 self.many_vrml_input.setFocus()
                 return
-            if not os.path.isdir(self.many_csv_input.text()):
-                self.many_csv_input.setFocus()
+            if not os.path.isdir(self.many_vrml_csv_input.text()):
+                self.many_vrml_csv_input.setFocus()
                 return
+            args = ["-o", "{}".format(self.many_vrml_csv_input.text()),
+                    "-w", "{}".format(self.many_vrml_input.text())]
 
-            args = ["-o", "{}".format(self.many_csv_input.text()),
-                    "-d", "{}".format(self.many_vrml_input.text())]
+        if kind == "one_imx":
+            if not os.path.isfile(self.one_imx_input.text()):
+                self.one_imx_input.setFocus()
+                return
+            if self.one_imx_csv_input.text() == "":
+                self.one_imx_csv_input.setFocus()
+                return
+            args = ["-a", "{}".format(self.one_imx_csv_input.text()),
+                    "-i", "{}".format(self.one_imx_input.text())]
+
+        if kind == "many_imx":
+            if not os.path.isdir(self.many_imx_input.text()):
+                self.many_imx_input.setFocus()
+                return
+            if not os.path.isdir(self.many_imx_csv_input.text()):
+                self.many_imx_csv_input.setFocus()
+                return
+            args = ["-o", "{}".format(self.many_imx_csv_input.text()),
+                    "-j", "{}".format(self.many_imx_input.text())]
 
         print "python compute_areas.py " + " ".join(args)
         p = Process(target=compute_areas.main, args=[args])
@@ -62,7 +88,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         else:
             p.join()
             if p.exitcode != 0:
-                self.statusBar.showMessage("ERROR: There was an error computing Areas, try with other VRML")
+                self.statusBar.showMessage("ERROR: There was an error computing Areas, try with other vrml/imx")
             self.tabWidget.setDisabled(False)
             QtGui.QApplication.restoreOverrideCursor()
 
@@ -93,7 +119,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 def main():
     app = QtGui.QApplication(sys.argv)
     mw = MainWindow()
-    # mw.one_vrml_input.setText("/home/jmorales/sets/vrmls/humanas-cingular/Api/api if6 1 8enero LONGS.vrml")
+    # mw.one_imx_input.setText("/home/jmorales/sets/imxs/humanas-cingular/Api/api if6 1 8enero LONGS.imx")
     # mw.one_csv_input.setText("/tmp/paco.csv")
     mw.show()
     app.exec_()
