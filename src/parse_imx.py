@@ -172,7 +172,7 @@ def parse_bpSurfacesViewer(node, vrml_filename, tab):
     if bpSurfaceComponent is not None:
         name = bpSurfaceComponent.find('name')
         if name is not None:
-            name_text = re.sub(r'\s', '_', name.text)
+            name_text = re.sub(r'[\s-]', '_', name.text)
             shape = 'DEF n' + name_text + ' ' + shape
     append_to_vrml(vrml_filename, tab + shape)
     tab += '  '
