@@ -6,7 +6,9 @@ import optparse
 import glob
 import sys
 import os
-
+import re
+from multiprocessing import Process
+import parse_imx
 
 class ComputeAreasParser(optparse.OptionParser):
     def __init__(self):
@@ -14,10 +16,14 @@ class ComputeAreasParser(optparse.OptionParser):
 
         self.add_option("-a", "--areas", dest="areas_file",
                         help="The output areas file in csv", metavar="FILE")
-        self.add_option("-i", "--input-vrml", dest="input_vrml",
+        self.add_option("-v", "--input-vrml", dest="input_vrml",
                         help="The mesh to meassure in vrml file format", metavar="FILE")
-        self.add_option("-d", "--auto-dir", dest="vrmls_dir",
+        self.add_option("-w", "--auto-vrml-dir", dest="vrmls_dir",
                         help="A directory with a bunch of vrmls", metavar="FILE")
+        self.add_option("-i", "--input-imx", dest="input_imx",
+                        help="The mesh to meassure in imx file format", metavar="FILE")
+        self.add_option("-j", "--auto-imx-dir", dest="imxs_dir",
+                        help="A directory with a bunch of imxs", metavar="FILE")
         self.add_option("-o", "--output-dir", dest="output_dir",
                         help="The output dir ussed when provides a dir as input", metavar="FILE")
 
@@ -54,7 +60,10 @@ def compute_centroids(actors_list):
     return [a.GetCenter() for a in actors_list]
 
 
-def csv_areas(actors_list, filename):
+def compute_names(names_list):
+    return [[a] for a in names_list]
+
+def csv_areas_vrml(actors_list, filename):
     centroids = compute_centroids(actors_list)  # Centroids of original actors
     areas = compute_all_areas(actors_list)
 
@@ -68,14 +77,47 @@ def csv_areas(actors_list, filename):
     with open(filename, 'w') as f:
         f.write(csv)
 
+def csv_areas_imx(actors_list, names_list, filename):
+    centroids = compute_centroids(actors_list)  # Centroids of original actors
+    areas = compute_all_areas(actors_list)
+    names = compute_names(names_list)
 
-def run(input_filename, areas_filename):
+    csv = "Object,Area,X,Y,Z,Name\n"
+    for i in range(len(areas)):
+        data = []
+        data.extend(areas[i])
+        data.extend(centroids[i])
+        data.extend(names[i])
+        csv += "%d,%f,%f,%f,%f,%s\n" % tuple(data)
+
+    with open(filename, 'w') as f:
+        f.write(csv)
+
+
+def run(input_filename, areas_filename, is_vrml):
 
     rw = vtk.vtkRenderWindow()
     rw.OffScreenRenderingOn()
 
+    if is_vrml:
+        vrml_filename = input_filename
+    else:
+        vrml_filename = re.sub('.imx', '.vrml', input_filename)
+        args = ["{}".format(input_filename), "{}".format(vrml_filename)]
+        p = Process(target=parse_imx.main, args=[args])
+        p.start()
+        p.join()
+
+        names_list = []
+        names_pattern = '([\s]*DEF\sn)([\w]*)([\s]*Shape[\s]*{[\s]*)$'
+        with open(vrml_filename) as f:
+            for line in f:
+                if re.search(names_pattern, line):
+                    line = re.sub(names_pattern, r'\2', line)
+                    names_list.append(line)
+
     importer = vtk.vtkVRMLImporter()
-    importer.SetFileName(input_filename)
+    importer.SetFileName(vrml_filename)
     importer.Read()
     importer.SetRenderWindow(rw)
     importer.Update()
@@ -87,8 +129,15 @@ def run(input_filename, areas_filename):
     actors.InitTraversal()
     actors_list = [actors.GetNextActor() for x in range(ren.GetNumberOfPropsRendered())]
 
-    csv_areas(actors_list, areas_filename)
+    if is_vrml:
+        csv_areas_vrml(actors_list, areas_filename)
+    else:
+        csv_areas_imx(actors_list, names_list, areas_filename)
+
     rw.Finalize()
+
+    if not is_vrml:
+        os.remove(vrml_filename)
 
 
 def main(args=None):
@@ -100,12 +149,21 @@ def main(args=None):
         for vrml in vrmls:
             name = os.path.basename(vrml).replace('.vrml','')
             out_filename = os.path.join(options.output_dir, name + ".csv")
-
             print '*** ', name
-            run(vrml, out_filename)
-    else:
-        run(options.input_vrml, options.areas_file)
-
+            run(vrml, out_filename, True)
+    elif options.input_vrml:
+        print '*** ', options.input_vrml
+        run(options.input_vrml, options.areas_file, True)
+    elif options.imxs_dir:
+        imxs = glob.glob(os.path.join(options.imxs_dir, "*.imx"))
+        for imx in imxs:
+            name = os.path.basename(imx).replace('.imx','')
+            out_filename = os.path.join(options.output_dir, name + ".csv")
+            print '*** ', name
+            run(imx, out_filename, False)
+    elif options.input_imx:
+        print '*** ', options.input_imx
+        run(options.input_imx, options.areas_file, False)
 
 if __name__ == '__main__':
     main()

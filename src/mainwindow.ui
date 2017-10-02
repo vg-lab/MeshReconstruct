@@ -20,7 +20,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="one_tab">
+      <widget class="QWidget" name="one_vrml_tab">
        <attribute name="title">
         <string>Area from one VMRL</string>
        </attribute>
@@ -45,7 +45,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QPushButton" name="one_csv_button">
+           <widget class="QPushButton" name="one_vrml_csv_button">
             <property name="text">
              <string>Save ...</string>
             </property>
@@ -55,16 +55,16 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="one_csv_input">
+           <widget class="QLineEdit" name="one_vrml_csv_input">
             <property name="placeholderText">
-             <string>ouput - CSV file </string>
+             <string>output - CSV file </string>
             </property>
            </widget>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="one_run_button">
+         <widget class="QPushButton" name="one_vrml_run_button">
           <property name="text">
            <string>Compute Areas</string>
           </property>
@@ -75,7 +75,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="many_tab">
+      <widget class="QWidget" name="many_vrml_tab">
        <attribute name="title">
         <string>Area from many VMRLs</string>
        </attribute>
@@ -109,7 +109,121 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QPushButton" name="many_csv_button">
+           <widget class="QPushButton" name="many_vrml_csv_button">
+            <property name="text">
+             <string>Save Folder...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-save">
+              <normaloff/>
+             </iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="many_vrml_run_button">
+          <property name="text">
+           <string>Compute Areas</string>
+          </property>
+          <property name="icon">
+           <iconset theme="media-playback-start"/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="one_imx_tab">
+       <attribute name="title">
+        <string>Area from one IMX</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="one_imx_button">
+            <property name="text">
+             <string>Open ...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-open"/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="one_imx_input">
+            <property name="placeholderText">
+             <string>input - IMX file</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="one_imx_csv_button">
+            <property name="text">
+             <string>Save ...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-save"/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="one_imx_csv_input">
+            <property name="placeholderText">
+             <string>output - CSV file </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="one_imx_run_button">
+          <property name="text">
+           <string>Compute Areas</string>
+          </property>
+          <property name="icon">
+           <iconset theme="media-playback-start"/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="many_imx_tab">
+       <attribute name="title">
+        <string>Area from many IMXs</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="many_imx_input">
+            <property name="placeholderText">
+             <string>Folder with many IMXs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="many_imx_csv_input">
+            <property name="placeholderText">
+             <string>Folder to save many CSVs </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="many_imx_button">
+            <property name="text">
+             <string>Open Folder...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-open">
+              <normaloff/>
+             </iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="many_imx_csv_button">
             <property name="text">
              <string>Save Folder...</string>
             </property>
