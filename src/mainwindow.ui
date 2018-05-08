@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>565</width>
+    <height>277</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>277</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>AreasCBB</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="bottomMargin">
+     <number>9</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="one_vrml_tab">
+       <attribute name="title">
+        <string>Area from one VMRL</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="one_vrml_button">
+            <property name="text">
+             <string>Open ...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-open">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="one_vrml_input">
+            <property name="placeholderText">
+             <string>input - VRML file</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="one_vrml_csv_button">
+            <property name="text">
+             <string>Save ...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-save">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="one_vrml_csv_input">
+            <property name="placeholderText">
+             <string>output - CSV file </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="one_vrml_run_button">
+          <property name="text">
+           <string>Compute Areas</string>
+          </property>
+          <property name="icon">
+           <iconset theme="media-playback-start">
+            <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="many_vrml_tab">
+       <attribute name="title">
+        <string>Area from many VMRLs</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="many_vrml_input">
+            <property name="placeholderText">
+             <string>Folder with many VRMLs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="many_vrml_csv_input">
+            <property name="placeholderText">
+             <string>Folder to save many CSVs </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="many_vrml_button">
+            <property name="text">
+             <string>Open Folder...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-open">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="many_vrml_csv_button">
+            <property name="text">
+             <string>Save Folder...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-save">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="many_vrml_run_button">
+          <property name="text">
+           <string>Compute Areas</string>
+          </property>
+          <property name="icon">
+           <iconset theme="media-playback-start">
+            <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="one_imx_tab">
+       <attribute name="title">
+        <string>Area from one IMX</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="one_imx_button">
+            <property name="text">
+             <string>Open ...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-open">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="one_imx_input">
+            <property name="placeholderText">
+             <string>input - IMX file</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="one_imx_csv_button">
+            <property name="text">
+             <string>Save ...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-save">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="one_imx_csv_input">
+            <property name="placeholderText">
+             <string>output - CSV file </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="one_imx_run_button">
+          <property name="text">
+           <string>Compute Areas</string>
+          </property>
+          <property name="icon">
+           <iconset theme="media-playback-start">
+            <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="many_imx_tab">
+       <attribute name="title">
+        <string>Area from many IMXs</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="many_imx_input">
+            <property name="placeholderText">
+             <string>Folder with many IMXs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="many_imx_csv_input">
+            <property name="placeholderText">
+             <string>Folder to save many CSVs </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="many_imx_button">
+            <property name="text">
+             <string>Open Folder...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-open">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="many_imx_csv_button">
+            <property name="text">
+             <string>Save Folder...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="document-save">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="many_imx_run_button">
+          <property name="text">
+           <string>Compute Areas</string>
+          </property>
+          <property name="icon">
+           <iconset theme="media-playback-start">
+            <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QFormLayout" name="formLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+        <property name="formAlignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="outputFormatLabel">
+          <property name="text">
+           <string>OutputFormat</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="outputFormatComboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Stl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Vrml</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="exportResolutionLabel">
+          <property name="text">
+           <string>ExportResolution</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="exportReductionDoubleSpinBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimum">
+           <double>10.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>30.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="precisionLabel">
+          <property name="text">
+           <string>Precision</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="precisionSpinBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimum">
+           <number>20</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>565</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <action name="action_Quit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
