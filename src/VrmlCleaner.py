@@ -23,27 +23,28 @@ def isVRML1(inFile):
     return "V1.0" in line
 
 
-def getSpine(file):
-    spineStr = ""
+def getSpine(line,file):
+    spineLines = []
+    spineLines.append(line)
     openBraces = 0
     for line in file:
         if "{" in line:
-            spineStr += line
+            spineLines.append(line)
             openBraces += 1
         elif "}" in line:
             if openBraces == 0:
-                spineStr += "}"
+                spineLines.append( "}")
                 break
             else:
-                spineStr += line
+                spineLines.append(line)
                 openBraces -= 1
         else:
-            spineStr += line
+            spineLines.append(line)
 
-    return spineStr
+    return spineLines
 
 
-def clean(inputPath, outputPath):
+def clean(inputPath, outputPath,segments):
     print "*** Cleaning VRML File"
     inputFile = open(inputPath)
 
@@ -53,10 +54,9 @@ def clean(inputPath, outputPath):
 
     spines = []
     for line in inputFile:
-        if "FilamentSegment7" in line or "ColorSwitch_cColorClass" in line:
-            spine = getSpine(inputFile)
-            spineAux = line + spine
-            spines.append(spineAux)
+        if "FilamentSegment7" in line or "ColorSwitch_cColorClass" in line or "bpColorSwitchSetInventor" in line or (segments and "FilamentSegment6" in line):
+            spine = getSpine(line,inputFile)
+            spines.append(spine)
 
     inputFile.close()
     outputFile = open(outputPath, "w")
@@ -64,13 +64,17 @@ def clean(inputPath, outputPath):
 
     for i in range(0, len(spines) - 1):
         spine = spines[i]
-        outputFile.write(spine)
+        for line in spine:
+            outputFile.write(line)
         outputFile.write(",")
 
-    outputFile.write(spines[len(spines) - 1])
+    for line in spines[len(spines) - 1]:
+        outputFile.write(line)
+
     outputFile.write("]\n")
     outputFile.write("}")
     outputFile.close()
+    print "*** Cleaning Finish"
 
 
 def skipSegment(inFile):

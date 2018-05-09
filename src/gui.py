@@ -6,15 +6,27 @@ from multiprocessing import Process
 
 if (os.name == 'nt'):
     import vtk
+
     vtk.vtkObject.GlobalWarningDisplayOff()
 import compute_areas
 
+
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
-    def __init__(self, *args):
+    def __init__(self, parameters,*args):
         super(MainWindow, self).__init__(*args)
         Ui_MainWindow.setupUi(self, self)
         self.last_dir = os.path.expanduser("~")
         self.connect_signals()
+        if not parameters:
+            self.precisionSpinBox.hide()
+            self.precisionLabel.hide()
+            self.exportResolutionLabel.hide()
+            self.exportReductionDoubleSpinBox.hide()
+            self.includeSegmentsCheckBox.hide()
+            self.includeSegmentsLabel.hide()
+            self.kernelSizeSpinBox.hide()
+            self.kernelSizeLabel.hide()
+
 
     def connect_signals(self):
         self.one_vrml_button.clicked.connect(lambda: self.open_dialog(self.one_vrml_input, "*.vrml"))
@@ -44,7 +56,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                     "-v", "{}".format(self.one_vrml_input.text()),
                     "-s", "{}".format(self.outputFormatComboBox.currentText()),
                     "-p", "{}".format(self.precisionSpinBox.value()),
-                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value())]
+                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value()),
+                    "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
+                    "-k", "{}".format(self.kernelSizeSpinBox.value())]
 
         if kind == "many_vrml":
             if not os.path.isdir(self.many_vrml_input.text()):
@@ -57,7 +71,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                     "-w", "{}".format(self.many_vrml_input.text()),
                     "-s", "{}".format(self.outputFormatComboBox.currentText()),
                     "-p", "{}".format(self.precisionSpinBox.value()),
-                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value())]
+                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value()),
+                    "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
+                    "-k", "{}".format(self.kernelSizeSpinBox.value())]
 
         if kind == "one_imx":
             if not os.path.isfile(self.one_imx_input.text()):
@@ -70,7 +86,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                     "-i", "{}".format(self.one_imx_input.text()),
                     "-s", "{}".format(self.outputFormatComboBox.currentText()),
                     "-p", "{}".format(self.precisionSpinBox.value()),
-                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value())]
+                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value()),
+                    "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
+                    "-k", "{}".format(self.kernelSizeSpinBox.value())]
 
         if kind == "many_imx":
             if not os.path.isdir(self.many_imx_input.text()):
@@ -83,7 +101,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                     "-j", "{}".format(self.many_imx_input.text()),
                     "-s", "{}".format(self.outputFormatComboBox.currentText()),
                     "-p", "{}".format(self.precisionSpinBox.value()),
-                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value())]
+                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value()),
+                    "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
+                    "-k", "{}".format(self.kernelSizeSpinBox.value())]
 
         print "python compute_areas.py " + " ".join(args)
 
@@ -94,7 +114,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         self.tabWidget.setDisabled(True)
         self.check_running(p)
-
 
     def check_running(self, p):
         if p.is_alive():
@@ -130,13 +149,14 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         target.setText(file)
 
 
-def main():
+def main(argv):
     app = QtGui.QApplication(sys.argv)
-    mw = MainWindow()
+    mw = MainWindow("-p" in argv)
     # mw.one_imx_input.setText("/home/jmorales/sets/imxs/humanas-cingular/Api/api if6 1 8enero LONGS.imx")
     # mw.one_csv_input.setText("/tmp/paco.csv")
     mw.show()
     app.exec_()
 
+
 if __name__ == '__main__':
-    main()
+    main(sys.argv)

@@ -26,9 +26,16 @@ class ComputeAreasParser(optparse.OptionParser):
                         help="The output dir ussed when provides a dir as input", metavar="FILE")
         self.add_option("-s", "--save", dest="save", help="save the reapired VRML", metavar="BOOLEAN")
 
-        self.add_option("-p", "--precision", dest="precision", help="Set the precision for repair method", metavar="INT")
+        self.add_option("-p", "--precision", dest="precision", help="Set the precision for repair method",
+                        metavar="INT")
 
-        self.add_option("-r", "--reduction", dest="reduction", help="Set the reduction for export meshes", metavar="DOUBLE")
+        self.add_option("-r", "--reduction", dest="reduction", help="Set the reduction for export meshes",
+                        metavar="DOUBLE")
+
+        self.add_option("-f", "--fragments", dest="segments", help="repair segments", metavar="BOOLEAN")
+
+        self.add_option("-k", "--kernel-size",dest="kernelSize", help="Set kernel Size", metavar="INT")
+
 
 PRECISION = 50
 
@@ -44,7 +51,9 @@ def main(args=None):
     options, _args = ComputeAreasParser().parse_args(args)
     save = options.save
     precision = int(options.precision)
-    reduction = 100 - float(options.reduction) #The parameter of method set the tarjet reduction
+    reduction = 100 - float(options.reduction)  # The parameter of method set the tarjet reduction
+    segments = options.segments
+    kernelSize = int(options.kernelSize)
 
     if options.vrmls_dir:
         vrmls = glob.glob(os.path.join(options.vrmls_dir, "*.vrml"))
@@ -52,20 +61,20 @@ def main(args=None):
             name = os.path.basename(vrml).replace('.vrml', '')
             dir = os.path.splitext(vrml)[0]
             vrmlCleaned = dir + "Cleaned.vrml"
-            VrmlCleaner.clean(vrml,vrmlCleaned)
+            VrmlCleaner.clean(vrml, vrmlCleaned, segments)
             out_filename = os.path.join(options.output_dir, name + ".csv")
             print '*** ', name
-            repair_mesh.main(vrmlCleaned, out_filename, precision, False, save, reduction)
+            repair_mesh.main(vrmlCleaned, out_filename, precision, False, save, reduction,kernelSize)
             os.remove(vrmlCleaned)
     elif options.input_vrml:
         print '*** ', options.input_vrml
-        vrml =  options.input_vrml
+        vrml = options.input_vrml
         name = os.path.basename(vrml).replace('.vrml', '')
         dir = os.path.splitext(vrml)[0]
         vrmlCleaned = dir + "Cleaned.vrml"
-        VrmlCleaner.clean(vrml,vrmlCleaned)
+        VrmlCleaner.clean(vrml, vrmlCleaned, segments)
 
-        repair_mesh.main(vrmlCleaned, options.areas_file, precision, False, save, reduction)
+        repair_mesh.main(vrmlCleaned, options.areas_file, precision, False, save, reduction,kernelSize)
         os.remove(vrmlCleaned)
     elif options.imxs_dir:
         imxs = glob.glob(os.path.join(options.imxs_dir, "*.imx"))
@@ -73,11 +82,11 @@ def main(args=None):
             name = os.path.basename(imx).replace('.imx', '')
             out_filename = os.path.join(options.output_dir, name + ".csv")
             print '*** ', name
-            repair_mesh.main(imx, out_filename, PRECISION, True, save, reduction)
+            repair_mesh.main(imx, out_filename, PRECISION, True, save, reduction,kernelSize)
 
     elif options.input_imx:
         print '*** ', options.input_imx
-        repair_mesh.main(options.input_imx, options.areas_file, PRECISION, True, save,reduction)
+        repair_mesh.main(options.input_imx, options.areas_file, PRECISION, True, save, reduction,kernelSize)
 
     print ""
     print ("---------------EXECUTION FINISHED---------------")

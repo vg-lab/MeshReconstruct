@@ -44,7 +44,7 @@ def write_image(image, filename):
     aWriter.Write()
 
 
-def voxelizer(polydata, scale=SCALE):
+def voxelizer(polydata, scale=SCALE,radius=RADIUS):
     """ volume voxelization not anti-aliased """
 
     # Get selection boundaries.
@@ -54,7 +54,7 @@ def voxelizer(polydata, scale=SCALE):
     # print "  Selection bounds are %s"%str((minX, maxX, minY, maxY, minZ, maxZ))  #dimensions of the resulting image
     # print "  Dimensions: %s"%str((maxX - minX, maxY - minY, maxZ - minZ))
 
-    padd = RADIUS + 6
+    padd = radius + 6
     (minX, maxX, minY, maxY, minZ, maxZ) = (
         minX - padd, maxX + padd, minY - padd, maxY + padd, minZ - padd, maxZ + padd)
 
@@ -95,7 +95,8 @@ def voxelizer(polydata, scale=SCALE):
     stencil2.SetBackgroundValue(255)
 
     stencil2.Update()
-
+    finishImage = stencil2.GetOutput()
+    print finishImage.GetNumberOfCells()
     return stencil2.GetOutput()
 
 
@@ -111,19 +112,19 @@ def open_image(image, radius):
 
 def dump_voxels(actor, filename):
     poly = actor.GetMapper().GetInput()
-    pre_image = voxelizer(poly)
+    pre_image = voxelizer(poly, 10)
     image = open_image(pre_image, RADIUS)
     write_image(image, filename)
 
 
-def open_actor(actor, actor_index=0, scale=SCALE):
+def open_actor(actor, actor_index=0, scale=SCALE,radius=RADIUS):
     poly = actor.GetMapper().GetInput()
     pre_image = voxelizer(poly, scale)
-    opened_image = open_image(pre_image, RADIUS)
+    opened_image = open_image(pre_image, radius)
 
     gauss = vtk.vtkImageGaussianSmooth()
     gauss.SetDimensionality(3)
-    gauss.SetStandardDeviation(RADIUS, RADIUS, RADIUS)
+    gauss.SetStandardDeviation(radius, radius, radius)
     gauss.SetInput(opened_image)
     gauss.Update()
 
@@ -244,10 +245,10 @@ def underScale(actor, scale):
     return actor
 
 
-def reduceMesh(actor,reduction):
+def reduceMesh(actor, reduction):
     decimate = vtk.vtkDecimatePro()
     decimate.SetInput(actor.GetMapper().GetInput())
-    decimate.SetTargetReduction(reduction/100)
+    decimate.SetTargetReduction(reduction / 100)
     decimate.Update()
 
     decimateMapper = vtk.vtkPolyDataMapper()
@@ -299,12 +300,12 @@ def save_vrml(name, dir, rw):
     exporter.Write()
 
 
-def initActorForExport(actor, rw, scale,reduction):
+def initActorForExport(actor, rw, scale, reduction):
     ren = rw.GetRenderers().GetFirstRenderer()
-    ren.AddActor(reduceMesh(underScale(actor, scale),reduction))
+    ren.AddActor(reduceMesh(underScale(actor, scale), reduction))
 
 
-def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduction =30  ,combine=False):
+def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduction=70,radius = RADIUS, combine=False):
     # TODO: The following doesn't hide the RenderWindow :/
     # factGraphics = vtk.vtkGraphicsFactory()
     # factGraphics.SetUseMesaClasses(1)
@@ -365,12 +366,14 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
         actor = actors.GetNextActor()
         area_pre = compute_area(actor)
         centroid = actor.GetCenter()
+        rescaled = False
         try:
-            open_actor(actor, i, scale)
+            open_actor(actor, i, scale,radius)
         except ValueError, e:
             # [KNOWN BUG] The sizes are corrected, but not the position
             scale = scale * 2
-            open_actor(actor, i, scale)
+            open_actor(actor, i, scale,radius)
+            rescaled = True
         area_post = compute_area(actor) / scale ** 2
 
         if is_imx:
@@ -387,7 +390,7 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
             csv += "%d,%f,%f,%f,%f,%f,%f\n" % tuple(data)
 
         if exportType != "None":
-            initActorForExport(actor, rwExport, scale,reduction)
+            initActorForExport(actor, rwExport, scale, reduction)
             if names_list is not None:
                 name = names_list[i]
             else:
@@ -396,16 +399,15 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
             if exportType == "Stl":
                 save_stl(actor, os.path.splitext(input_filename)[0], str(name))
             elif exportType == "Vrml":
-                save_vrml(str(name), os.path.splitext(input_filename)[0],rwExport)
+                save_vrml(str(name), os.path.splitext(input_filename)[0], rwExport)
             """elif exportType == "Obj":
                     print("-------- Saving obj files (This process might take a long time, please wait) -----------")
                     save_obj(actors_list, os.path.splitext(input_filename)[0], names_list)"""
 
-
         ren.RemoveActor(actor)
         renExport.RemoveActor(actor)
-
-
+        if rescaled:
+            scale /= 2
 
     with open(areas_filename, 'w') as f:
         f.write(csv)
