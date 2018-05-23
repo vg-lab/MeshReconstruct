@@ -36,6 +36,8 @@ class ComputeAreasParser(optparse.OptionParser):
 
         self.add_option("-k", "--kernel-size",dest="kernelSize", help="Set kernel Size", metavar="INT")
 
+        self.add_option("-c", "--cleanVrml", dest="cleanVrml", help="Set vrml cleaner", metavar="BOOLEAN")
+
 
 PRECISION = 50
 
@@ -54,28 +56,36 @@ def main(args=None):
     reduction = 100 - float(options.reduction)  # The parameter of method set the tarjet reduction
     segments = options.segments
     kernelSize = int(options.kernelSize)
+    cleanVrml = options.cleanVrml == "True"
 
     if options.vrmls_dir:
         vrmls = glob.glob(os.path.join(options.vrmls_dir, "*.vrml"))
         for vrml in vrmls:
             name = os.path.basename(vrml).replace('.vrml', '')
             dir = os.path.splitext(vrml)[0]
-            vrmlCleaned = dir + "Cleaned.vrml"
-            VrmlCleaner.clean(vrml, vrmlCleaned, segments)
+            vrmlFile = vrml
+            if cleanVrml:
+                vrmlCleaned = dir + "Cleaned.vrml"
+                VrmlCleaner.clean(vrml, vrmlCleaned, segments)
+                vrmlFile = vrmlCleaned
             out_filename = os.path.join(options.output_dir, name + ".csv")
             print '*** ', name
-            repair_mesh.main(vrmlCleaned, out_filename, precision, False, save, reduction,kernelSize)
-            os.remove(vrmlCleaned)
+            repair_mesh.main(vrmlFile, out_filename, precision, False, save, reduction,kernelSize)
+            if cleanVrml:
+                os.remove(vrmlCleaned)
     elif options.input_vrml:
         print '*** ', options.input_vrml
         vrml = options.input_vrml
         name = os.path.basename(vrml).replace('.vrml', '')
         dir = os.path.splitext(vrml)[0]
-        vrmlCleaned = dir + "Cleaned.vrml"
-        VrmlCleaner.clean(vrml, vrmlCleaned, segments)
+        if cleanVrml:
+            vrmlCleaned = dir + "Cleaned.vrml"
+            VrmlCleaner.clean(vrml, vrmlCleaned, segments)
+            vrml = vrmlCleaned
 
-        repair_mesh.main(vrmlCleaned, options.areas_file, precision, False, save, reduction,kernelSize)
-        os.remove(vrmlCleaned)
+        repair_mesh.main(vrml, options.areas_file, precision, False, save, reduction,kernelSize)
+        if cleanVrml:
+            os.remove(vrml)
     elif options.imxs_dir:
         imxs = glob.glob(os.path.join(options.imxs_dir, "*.imx"))
         for imx in imxs:

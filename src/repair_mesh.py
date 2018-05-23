@@ -7,6 +7,9 @@ import sys
 import os
 import optparse
 import glob
+import numpy as np
+import math
+import time
 
 import re
 
@@ -44,15 +47,15 @@ def write_image(image, filename):
     aWriter.Write()
 
 
-def voxelizer(polydata, scale=SCALE,radius=RADIUS):
+def voxelizer(polydata, scale=SCALE, radius=RADIUS):
     """ volume voxelization not anti-aliased """
 
     # Get selection boundaries.
     (minX, maxX, minY, maxY, minZ, maxZ) = [int(x * scale) for x in
                                             polydata.GetBounds()]  # convert tuple of floats to ints
 
-    # print "  Selection bounds are %s"%str((minX, maxX, minY, maxY, minZ, maxZ))  #dimensions of the resulting image
-    # print "  Dimensions: %s"%str((maxX - minX, maxY - minY, maxZ - minZ))
+    print "  Selection bounds are %s" % str((minX, maxX, minY, maxY, minZ, maxZ))  # dimensions of the resulting image
+    print "  Dimensions: %s" % str((maxX - minX, maxY - minY, maxZ - minZ))
 
     padd = radius + 6
     (minX, maxX, minY, maxY, minZ, maxZ) = (
@@ -100,6 +103,71 @@ def voxelizer(polydata, scale=SCALE,radius=RADIUS):
     return stencil2.GetOutput()
 
 
+
+def axisAligment(actor):
+    polyData = actor.GetMapper().GetInput()
+    centerCalculer = vtk.vtkCenterOfMass()
+    centerCalculer.SetInput(polyData)
+    centerCalculer.SetUseScalarsAsWeights(False)
+    centerCalculer.Update()
+    print polyData.GetPoint(0)
+
+    center = centerCalculer.GetCenter()
+    print center
+
+    centerTransform = vtk.vtkTransform()
+    centerTransform.Translate(-center[0], -center[1], -center[2])
+
+    transformFilter = vtk.vtkTransformFilter()
+    transformFilter.SetInput(polyData)
+    transformFilter.SetTransform(centerTransform)
+    transformFilter.Update()
+
+    mapper = vtk.vtkPolyDataMapper()
+    mapper.SetInput(transformFilter.GetOutput())
+    actor.SetMapper(mapper)
+
+    polyData = actor.GetMapper().GetInput()
+
+    pointsMatrixAux = []
+
+    for i in range(0, polyData.GetNumberOfPoints()):
+        point = polyData.GetPoint(i)
+        pointsMatrixAux.append(point)
+
+    print pointsMatrixAux[0]
+    pointMatrix = np.matrix(pointsMatrixAux)
+    pointMatrixT = pointMatrix.transpose()
+    covarianzeMatrix = pointMatrixT * pointMatrix
+    u, s, vh = np.linalg.svd(covarianzeMatrix, full_matrices=True)
+
+    rotationMatrix = vtk.vtkMatrix4x4()
+
+    for i in range(3):
+        for j in range(3):
+            rotationMatrix.SetElement(i, j, u[i, j])
+        rotationMatrix.SetElement(i, 3, 0)
+
+    for i in range(3):
+        rotationMatrix.SetElement(3, i, 0)
+
+    rotationMatrix.SetElement(3, 3, 1)
+
+    rotationTransform = vtk.vtkTransform()
+    rotationTransform.SetMatrix(rotationMatrix)
+
+    transformFilter = vtk.vtkTransformFilter()
+    transformFilter.SetInput(actor.GetMapper().GetInput())
+    transformFilter.SetTransform(rotationTransform)
+    transformFilter.Update()
+
+    mapper = vtk.vtkPolyDataMapper()
+    mapper.SetInput(transformFilter.GetOutput())
+    actor.SetMapper(mapper)
+
+    return center, rotationTransform
+
+
 def open_image(image, radius):
     openFilter = vtk.vtkImageDilateErode3D()
     openFilter.SetDilateValue(255)
@@ -112,12 +180,12 @@ def open_image(image, radius):
 
 def dump_voxels(actor, filename):
     poly = actor.GetMapper().GetInput()
-    pre_image = voxelizer(poly, 10)
+    pre_image = voxelizer(poly, 50)
     image = open_image(pre_image, RADIUS)
     write_image(image, filename)
 
 
-def open_actor(actor, actor_index=0, scale=SCALE,radius=RADIUS):
+def open_actor(actor, actor_index=0, scale=SCALE, radius=RADIUS):
     poly = actor.GetMapper().GetInput()
     pre_image = voxelizer(poly, scale)
     opened_image = open_image(pre_image, radius)
@@ -304,8 +372,34 @@ def initActorForExport(actor, rw, scale, reduction):
     ren = rw.GetRenderers().GetFirstRenderer()
     ren.AddActor(reduceMesh(underScale(actor, scale), reduction))
 
+def toOriginalPos(actor, center,rotationTransform):
+    polyData = actor.GetMapper().GetInput()
+    centerTransform = vtk.vtkTransform()
+    centerTransform.Translate(-center[0], -center[1], -center[2])
 
-def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduction=70,radius = RADIUS, combine=False):
+    transformFilter = vtk.vtkTransformFilter()
+    transformFilter.SetInput(polyData)
+    transformFilter.SetTransform(centerTransform)
+    transformFilter.Update()
+
+    mapper = vtk.vtkPolyDataMapper()
+    mapper.SetInput(transformFilter.GetOutput())
+    actor.SetMapper(mapper)
+
+    polyData = actor.GetMapper().GetInput()
+
+    transformFilter = vtk.vtkTransformFilter()
+    transformFilter.SetInput(actor.GetMapper().GetInput())
+    transformFilter.SetTransform(rotationTransform)
+    transformFilter.Update()
+
+    mapper = vtk.vtkPolyDataMapper()
+    mapper.SetInput(transformFilter.GetOutput())
+    actor.SetMapper(mapper)
+
+
+
+def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduction=70, radius=RADIUS, combine=False):
     # TODO: The following doesn't hide the RenderWindow :/
     # factGraphics = vtk.vtkGraphicsFactory()
     # factGraphics.SetUseMesaClasses(1)
@@ -330,9 +424,9 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
         names_list = None
 
     rw = vtk.vtkRenderWindow()
-    # rwi = vtk.vtkRenderWindowInteractor()
-    # rwi.SetRenderWindow(rw)
-    rw.OffScreenRenderingOn()
+    rwi = vtk.vtkRenderWindowInteractor()
+    rwi.SetRenderWindow(rw)
+    # rw.OffScreenRenderingOn()
 
     importer = vtk.vtkVRMLImporter()
     importer.SetFileName(vrml_filename)
@@ -368,11 +462,15 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
         centroid = actor.GetCenter()
         rescaled = False
         try:
-            open_actor(actor, i, scale,radius)
+            rw.Render()
+            (center,rotation) = axisAligment(actor)
+            rw.Render()
+            open_actor(actor, i, scale, radius)
+
         except ValueError, e:
             # [KNOWN BUG] The sizes are corrected, but not the position
             scale = scale * 2
-            open_actor(actor, i, scale,radius)
+            open_actor(actor, i, scale, radius)
             rescaled = True
         area_post = compute_area(actor) / scale ** 2
 
@@ -390,6 +488,7 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
             csv += "%d,%f,%f,%f,%f,%f,%f\n" % tuple(data)
 
         if exportType != "None":
+            toOriginalPos(actor,center,rotation)
             initActorForExport(actor, rwExport, scale, reduction)
             if names_list is not None:
                 name = names_list[i]

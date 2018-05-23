@@ -52,6 +52,7 @@ def clean(inputPath, outputPath,segments):
         if "{" in line:
             break
 
+
     spines = []
     for line in inputFile:
         if "FilamentSegment7" in line or "ColorSwitch_cColorClass" in line or "bpColorSwitchSetInventor" in line or (segments and "FilamentSegment6" in line):

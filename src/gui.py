@@ -26,6 +26,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             self.includeSegmentsLabel.hide()
             self.kernelSizeSpinBox.hide()
             self.kernelSizeLabel.hide()
+            self.cleanVrmlCheckBox.hide()
+            self.cleanVrmlLabel.hide()
 
 
     def connect_signals(self):
@@ -58,7 +60,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                     "-p", "{}".format(self.precisionSpinBox.value()),
                     "-r", "{}".format(self.exportReductionDoubleSpinBox.value()),
                     "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
-                    "-k", "{}".format(self.kernelSizeSpinBox.value())]
+                    "-k", "{}".format(self.kernelSizeSpinBox.value()),
+                    "-c", "{}".format(self.cleanVrmlCheckBox.isChecked())]
 
         if kind == "many_vrml":
             if not os.path.isdir(self.many_vrml_input.text()):
@@ -73,7 +76,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                     "-p", "{}".format(self.precisionSpinBox.value()),
                     "-r", "{}".format(self.exportReductionDoubleSpinBox.value()),
                     "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
-                    "-k", "{}".format(self.kernelSizeSpinBox.value())]
+                    "-k", "{}".format(self.kernelSizeSpinBox.value()),
+                    "-c", "{}".format(self.cleanVrmlCheckBox.isChecked())]
 
         if kind == "one_imx":
             if not os.path.isfile(self.one_imx_input.text()):
