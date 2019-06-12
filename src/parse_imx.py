@@ -279,7 +279,7 @@ def parse_root(node, vrml_filename, names_filename):
 
         print('[DONE]')
     else:
-        print 'Error in imx file: bpSurfaceApplication node not found!'
+        print ('Error in imx file: bpSurfaceApplication node not found!')
 
 
 def main(args):
@@ -290,7 +290,7 @@ def main(args):
         root = et.parse(imx_filename).getroot()
         parse_root(root, vrml_filename, names_filename)
     else:
-        print 'Error: no arguments passed to parser.'
+        print('Error: no arguments passed to parser.')
 
 
 if __name__ == '__main__':

@@ -40,7 +40,7 @@ class RepairMeshParser(optparse.OptionParser):
 def write_image(image, filename):
     """Write vtk image data to file."""
     aWriter = vtk.vtkMetaImageWriter()
-    aWriter.SetInput(image)
+    aWriter.SetInputData(image)
     aWriter.SetFileName(filename)
     aWriter.SetFileDimensionality(3)
     aWriter.SetCompression(False)
@@ -54,8 +54,8 @@ def voxelizer(polydata, scale=SCALE, radius=RADIUS):
     (minX, maxX, minY, maxY, minZ, maxZ) = [int(x * scale) for x in
                                             polydata.GetBounds()]  # convert tuple of floats to ints
 
-    print "  Selection bounds are %s" % str((minX, maxX, minY, maxY, minZ, maxZ))  # dimensions of the resulting image
-    print "  Dimensions: %s" % str((maxX - minX, maxY - minY, maxZ - minZ))
+    print("  Selection bounds are %s" % str((minX, maxX, minY, maxY, minZ, maxZ)))  # dimensions of the resulting image
+    print("  Dimensions: %s" % str((maxX - minX, maxY - minY, maxZ - minZ)))
 
     padd = radius + 6
     (minX, maxX, minY, maxY, minZ, maxZ) = (
@@ -66,7 +66,7 @@ def voxelizer(polydata, scale=SCALE, radius=RADIUS):
 
     ## Convert a surface mesh into an image stencil that can be used to mask an image with vtkImageStencil.
     polyToStencilFilter = vtk.vtkPolyDataToImageStencil()
-    polyToStencilFilter.SetInput(polydata)
+    polyToStencilFilter.SetInputData(polydata)
     polyToStencilFilter.SetOutputWholeExtent(minX, maxX, minY, maxY, minZ, maxZ)
     polyToStencilFilter.SetOutputSpacing(ps1, ps1, ps1)
     polyToStencilFilter.SetOutputOrigin(0.0, 0.0, 0.0)
@@ -77,29 +77,28 @@ def voxelizer(polydata, scale=SCALE, radius=RADIUS):
     image.SetSpacing(ps2, ps2, ps2)
     image.SetOrigin(0.0, 0.0, 0.0)
     image.SetExtent(minX, maxX, minY, maxY, minZ, maxZ)
-    image.SetScalarTypeToUnsignedChar()
-    image.AllocateScalars()
+    image.AllocateScalars(vtk.VTK_UNSIGNED_CHAR,1)
 
     # Mask the empty image with the image stencil.
     # First All the background to 0
     # Needed otherwise introduces noise
     stencil = vtk.vtkImageStencil()
-    stencil.SetInput(image)
-    stencil.SetStencil(polyToStencilFilter.GetOutput())
+    stencil.SetInputData(image)
+    stencil.SetStencilData(polyToStencilFilter.GetOutput())
     stencil.ReverseStencilOff()
     stencil.SetBackgroundValue(0)
     stencil.Update()
 
     # Foreground to 255
     stencil2 = vtk.vtkImageStencil()
-    stencil2.SetInput(stencil.GetOutput())
-    stencil2.SetStencil(polyToStencilFilter.GetOutput())
+    stencil2.SetInputData(stencil.GetOutput())
+    stencil2.SetStencilData(polyToStencilFilter.GetOutput())
     stencil2.ReverseStencilOn()
     stencil2.SetBackgroundValue(255)
 
     stencil2.Update()
     finishImage = stencil2.GetOutput()
-    print finishImage.GetNumberOfCells()
+    print(finishImage.GetNumberOfCells())
     return stencil2.GetOutput()
 
 
@@ -107,24 +106,24 @@ def voxelizer(polydata, scale=SCALE, radius=RADIUS):
 def axisAligment(actor):
     polyData = actor.GetMapper().GetInput()
     centerCalculer = vtk.vtkCenterOfMass()
-    centerCalculer.SetInput(polyData)
+    centerCalculer.SetInputData(polyData)
     centerCalculer.SetUseScalarsAsWeights(False)
     centerCalculer.Update()
-    print polyData.GetPoint(0)
+    print(polyData.GetPoint(0))
 
     center = centerCalculer.GetCenter()
-    print center
+    print(center)
 
     centerTransform = vtk.vtkTransform()
     centerTransform.Translate(-center[0], -center[1], -center[2])
 
     transformFilter = vtk.vtkTransformFilter()
-    transformFilter.SetInput(polyData)
+    transformFilter.SetInputData(polyData)
     transformFilter.SetTransform(centerTransform)
     transformFilter.Update()
 
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInput(transformFilter.GetOutput())
+    mapper.SetInputData(transformFilter.GetOutput())
     actor.SetMapper(mapper)
 
     polyData = actor.GetMapper().GetInput()
@@ -135,7 +134,7 @@ def axisAligment(actor):
         point = polyData.GetPoint(i)
         pointsMatrixAux.append(point)
 
-    print pointsMatrixAux[0]
+    print(pointsMatrixAux[0])
     pointMatrix = np.matrix(pointsMatrixAux)
     pointMatrixT = pointMatrix.transpose()
     covarianzeMatrix = pointMatrixT * pointMatrix
@@ -157,12 +156,12 @@ def axisAligment(actor):
     rotationTransform.SetMatrix(rotationMatrix)
 
     transformFilter = vtk.vtkTransformFilter()
-    transformFilter.SetInput(actor.GetMapper().GetInput())
+    transformFilter.SetInputData(actor.GetMapper().GetInput())
     transformFilter.SetTransform(rotationTransform)
     transformFilter.Update()
 
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInput(transformFilter.GetOutput())
+    mapper.SetInputData(transformFilter.GetOutput())
     actor.SetMapper(mapper)
 
     return center, rotationTransform
@@ -173,7 +172,7 @@ def open_image(image, radius):
     openFilter.SetDilateValue(255)
     openFilter.SetErodeValue(0)
     openFilter.SetKernelSize(radius, radius, radius)
-    openFilter.SetInput(image)
+    openFilter.SetInputData(image)
     openFilter.Update()
     return openFilter.GetOutput()
 
@@ -193,13 +192,13 @@ def open_actor(actor, actor_index=0, scale=SCALE, radius=RADIUS):
     gauss = vtk.vtkImageGaussianSmooth()
     gauss.SetDimensionality(3)
     gauss.SetStandardDeviation(radius, radius, radius)
-    gauss.SetInput(opened_image)
+    gauss.SetInputData(opened_image)
     gauss.Update()
 
     image_to_contour = gauss.GetOutput()
 
     contour = vtk.vtkMarchingCubes()
-    contour.SetInput(image_to_contour)
+    contour.SetInputData(image_to_contour)
     contour.SetValue(0, 127.5)
     contour.ComputeScalarsOff()
     contour.Update()
@@ -207,7 +206,7 @@ def open_actor(actor, actor_index=0, scale=SCALE, radius=RADIUS):
     repared_poly = contour.GetOutput()
 
     if repared_poly.GetNumberOfCells() == 0:
-        print "ERROR: number_of_cells = 0",
+        print("ERROR: number_of_cells = 0", end=' ')
         # write_image(image_to_contour, "/tmp/%d.mhd"%actor_index)
         raise ValueError("ERROR: number_of_cells = 0")
 
@@ -215,7 +214,7 @@ def open_actor(actor, actor_index=0, scale=SCALE, radius=RADIUS):
     # print "  Repared bounds are %s"%str((minX, maxX, minY, maxY, minZ, maxZ))  #dimensions of the resulting image
     # print "  Dimensions: %s"%str((maxX - minX, maxY - minY, maxZ - minZ))
 
-    actor.GetMapper().SetInput(repared_poly)
+    actor.GetMapper().SetInputData(repared_poly)
 
 
 def compute_area(actor):
@@ -237,7 +236,7 @@ def combine_actors(actors_list):
     combined_poly = appender.GetOutput()
     combined_actor = vtk.vtkActor()
     combined_actor.SetMapper(vtk.vtkPolyDataMapper())
-    combined_actor.GetMapper().SetInput(combined_poly)
+    combined_actor.GetMapper().SetInputData(combined_poly)
     return combined_actor
 
 
@@ -256,7 +255,7 @@ def compute_all_areas(actors_list, scale=SCALE):
         area_pre = compute_area(actor)
         try:
             open_actor(actor, i, scale)
-        except ValueError, e:
+        except ValueError as e:
             # [KNOWN BUG] The sizes are corrected, but not the position
             scale = scale * 2
             open_actor(actor, i, scale)
@@ -264,7 +263,7 @@ def compute_all_areas(actors_list, scale=SCALE):
 
         areas.append((i, area_pre, area_post, area_post / area_pre))
         sys.stdout.flush()
-    print "\n"
+    print("\n")
     return areas
 
 
@@ -304,23 +303,23 @@ def underScale(actor, scale):
     transform.Scale(relation, relation, relation)
 
     transformFilter = vtk.vtkTransformFilter()
-    transformFilter.SetInput(actor.GetMapper().GetInput())
+    transformFilter.SetInputData(actor.GetMapper().GetInput())
     transformFilter.SetTransform(transform)
 
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInput(transformFilter.GetOutput())
+    mapper.SetInputData(transformFilter.GetOutput())
     actor.SetMapper(mapper)
     return actor
 
 
 def reduceMesh(actor, reduction):
     decimate = vtk.vtkDecimatePro()
-    decimate.SetInput(actor.GetMapper().GetInput())
+    decimate.SetInputData(actor.GetMapper().GetInput())
     decimate.SetTargetReduction(reduction / 100)
     decimate.Update()
 
     decimateMapper = vtk.vtkPolyDataMapper()
-    decimateMapper.SetInput(decimate.GetOutput())
+    decimateMapper.SetInputData(decimate.GetOutput())
     actor.SetMapper(decimateMapper)
     return actor
 
@@ -351,7 +350,7 @@ def save_stl(actor, dir, name):
 
     path = '%s/%s.stl' % (dir, name)
     exporter.SetFileName(path)
-    exporter.SetInput(actor.GetMapper().GetInput())
+    exporter.SetInputData(actor.GetMapper().GetInput())
     exporter.Write()
 
 
@@ -378,23 +377,23 @@ def toOriginalPos(actor, center,rotationTransform):
     centerTransform.Translate(-center[0], -center[1], -center[2])
 
     transformFilter = vtk.vtkTransformFilter()
-    transformFilter.SetInput(polyData)
+    transformFilter.SetInputData(polyData)
     transformFilter.SetTransform(centerTransform)
     transformFilter.Update()
 
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInput(transformFilter.GetOutput())
+    mapper.SetInputData(transformFilter.GetOutput())
     actor.SetMapper(mapper)
 
     polyData = actor.GetMapper().GetInput()
 
     transformFilter = vtk.vtkTransformFilter()
-    transformFilter.SetInput(actor.GetMapper().GetInput())
+    transformFilter.SetInputData(actor.GetMapper().GetInput())
     transformFilter.SetTransform(rotationTransform)
     transformFilter.Update()
 
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInput(transformFilter.GetOutput())
+    mapper.SetInputData(transformFilter.GetOutput())
     actor.SetMapper(mapper)
 
 
@@ -454,7 +453,8 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
     else:
         csv = "Object,Pre_Area,Post_Area,Post/Pre,X,Y,Z\n"
 
-    print "-------- Repairing original mesh and Calculating areas (This process might take a long time, please wait) -----------"
+    print(
+        "-------- Repairing original mesh and Calculating areas (This process might take a long time, please wait) -----------")
     for i in range(ren.GetNumberOfPropsRendered()):
         sys.stdout.write("%d _" % i)
         actor = actors.GetNextActor()
@@ -467,7 +467,7 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
             rw.Render()
             open_actor(actor, i, scale, radius)
 
-        except ValueError, e:
+        except ValueError as e:
             # [KNOWN BUG] The sizes are corrected, but not the position
             scale = scale * 2
             open_actor(actor, i, scale, radius)
@@ -515,4 +515,4 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
         os.remove(names_filename)
 
     rw.Finalize()
-    print ""
+    print("")

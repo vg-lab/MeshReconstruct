@@ -69,12 +69,12 @@ def main(args=None):
                 VrmlCleaner.clean(vrml, vrmlCleaned, segments)
                 vrmlFile = vrmlCleaned
             out_filename = os.path.join(options.output_dir, name + ".csv")
-            print '*** ', name
+            print('*** ', name)
             repair_mesh.main(vrmlFile, out_filename, precision, False, save, reduction,kernelSize)
             if cleanVrml:
                 os.remove(vrmlCleaned)
     elif options.input_vrml:
-        print '*** ', options.input_vrml
+        print('*** ', options.input_vrml)
         vrml = options.input_vrml
         name = os.path.basename(vrml).replace('.vrml', '')
         dir = os.path.splitext(vrml)[0]
@@ -91,14 +91,14 @@ def main(args=None):
         for imx in imxs:
             name = os.path.basename(imx).replace('.imx', '')
             out_filename = os.path.join(options.output_dir, name + ".csv")
-            print '*** ', name
+            print('*** ', name)
             repair_mesh.main(imx, out_filename, PRECISION, True, save, reduction,kernelSize)
 
     elif options.input_imx:
-        print '*** ', options.input_imx
+        print('*** ', options.input_imx)
         repair_mesh.main(options.input_imx, options.areas_file, PRECISION, True, save, reduction,kernelSize)
 
-    print ""
+    print("")
     print ("---------------EXECUTION FINISHED---------------")
 
 

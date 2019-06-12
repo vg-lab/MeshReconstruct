@@ -45,7 +45,7 @@ def getSpine(line,file):
 
 
 def clean(inputPath, outputPath,segments):
-    print "*** Cleaning VRML File"
+    print("*** Cleaning VRML File")
     inputFile = open(inputPath)
 
     for line in inputFile:
@@ -75,7 +75,7 @@ def clean(inputPath, outputPath,segments):
     outputFile.write("]\n")
     outputFile.write("}")
     outputFile.close()
-    print "*** Cleaning Finish"
+    print("*** Cleaning Finish")
 
 
 def skipSegment(inFile):
