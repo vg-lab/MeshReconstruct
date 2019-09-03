@@ -1,8 +1,9 @@
 import os
 import sys
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 from main_window import Ui_MainWindow
 from multiprocessing import Process
+from builtins import str
 
 if (os.name == 'nt'):
     import vtk
@@ -11,7 +12,7 @@ if (os.name == 'nt'):
 import compute_areas
 
 
-class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
+class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parameters,*args):
         super(MainWindow, self).__init__(*args)
         Ui_MainWindow.setupUi(self, self)
@@ -109,13 +110,13 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                     "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
                     "-k", "{}".format(self.kernelSizeSpinBox.value())]
 
-        print "python compute_areas.py " + " ".join(args)
+        print("python compute_areas.py " + " ".join(args))
 
         p = Process(target=compute_areas.main, args=[args])
         p.start()
 
         self.statusBar.clearMessage()
-        QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+        QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         self.tabWidget.setDisabled(True)
         self.check_running(p)
 
@@ -127,34 +128,34 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             if p.exitcode != 0:
                 self.statusBar.showMessage("ERROR: There was an error computing Areas, try with other vrml/imx")
             self.tabWidget.setDisabled(False)
-            QtGui.QApplication.restoreOverrideCursor()
+            QtWidgets.QApplication.restoreOverrideCursor()
 
     def _handle_file_path(self, file_path):
-        file = unicode(file_path, sys.getfilesystemencoding())  # To unicode
-        file = file.encode(sys.getfilesystemencoding())  # To latin-1 if needed
+        file = file_path[0]  # To unicode
+         # To latin-1 if needed
         self.last_dir = os.path.dirname(file)
         return file
 
     def open_dialog(self, target, filter):
-        file = QtGui.QFileDialog.getOpenFileName(self, "Open File",
+        file = QtWidgets.QFileDialog.getOpenFileName(self, "Open File",
                                                  self.last_dir, filter)  # QtCore.QString
         file = self._handle_file_path(file)
         target.setText(file)
 
     def save_dialog(self, target, filter):
-        file = QtGui.QFileDialog.getSaveFileName(self, "Save File",
+        file = QtWidgets.QFileDialog.getSaveFileName(self, "Save File",
                                                  self.last_dir, filter)  # QtCore.QString
         file = self._handle_file_path(file)
         target.setText(file)
 
     def open_dir_dialog(self, target):
-        file = QtGui.QFileDialog.getExistingDirectory(self, "Open Folder", self.last_dir)  # QtCore.QString
+        file = QtWidgets.QFileDialog.getExistingDirectory(self, "Open Folder", self.last_dir)  # QtCore.QString
         file = self._handle_file_path(file)
         target.setText(file)
 
 
 def main(argv):
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     mw = MainWindow("-p" in argv)
     # mw.one_imx_input.setText("/home/jmorales/sets/imxs/humanas-cingular/Api/api if6 1 8enero LONGS.imx")
     # mw.one_csv_input.setText("/tmp/paco.csv")
