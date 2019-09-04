@@ -54,8 +54,8 @@ def voxelizer(polydata, scale=SCALE, radius=RADIUS):
     (minX, maxX, minY, maxY, minZ, maxZ) = [int(x * scale) for x in
                                             polydata.GetBounds()]  # convert tuple of floats to ints
 
-    print("  Selection bounds are %s" % str((minX, maxX, minY, maxY, minZ, maxZ)))  # dimensions of the resulting image
-    print("  Dimensions: %s" % str((maxX - minX, maxY - minY, maxZ - minZ)))
+    # print("  Selection bounds are %s" % str((minX, maxX, minY, maxY, minZ, maxZ)))  # dimensions of the resulting image
+    # print("  Dimensions: %s" % str((maxX - minX, maxY - minY, maxZ - minZ)))
 
     padd = radius + 6
     (minX, maxX, minY, maxY, minZ, maxZ) = (
@@ -77,7 +77,7 @@ def voxelizer(polydata, scale=SCALE, radius=RADIUS):
     image.SetSpacing(ps2, ps2, ps2)
     image.SetOrigin(0.0, 0.0, 0.0)
     image.SetExtent(minX, maxX, minY, maxY, minZ, maxZ)
-    image.AllocateScalars(vtk.VTK_UNSIGNED_CHAR,1)
+    image.AllocateScalars(vtk.VTK_UNSIGNED_CHAR, 1)
 
     # Mask the empty image with the image stencil.
     # First All the background to 0
@@ -102,15 +102,12 @@ def voxelizer(polydata, scale=SCALE, radius=RADIUS):
     return stencil2.GetOutput()
 
 
-
 def axisAligment(actor):
     polyData = actor.GetMapper().GetInput()
     centerCalculer = vtk.vtkCenterOfMass()
     centerCalculer.SetInputData(polyData)
     centerCalculer.SetUseScalarsAsWeights(False)
     centerCalculer.Update()
-    print(polyData.GetPoint(0))
-
     center = centerCalculer.GetCenter()
     print(center)
 
@@ -124,9 +121,17 @@ def axisAligment(actor):
 
     mapper = vtk.vtkPolyDataMapper()
     mapper.SetInputData(transformFilter.GetOutput())
+    mapper.Update()
     actor.SetMapper(mapper)
 
     polyData = actor.GetMapper().GetInput()
+
+    centerCalculer = vtk.vtkCenterOfMass()
+    centerCalculer.SetInputData(polyData)
+    centerCalculer.SetUseScalarsAsWeights(False)
+    centerCalculer.Update()
+    centerAux = centerCalculer.GetCenter()
+    print(centerAux)
 
     pointsMatrixAux = []
 
@@ -134,7 +139,6 @@ def axisAligment(actor):
         point = polyData.GetPoint(i)
         pointsMatrixAux.append(point)
 
-    print(pointsMatrixAux[0])
     pointMatrix = np.matrix(pointsMatrixAux)
     pointMatrixT = pointMatrix.transpose()
     covarianzeMatrix = pointMatrixT * pointMatrix
@@ -307,7 +311,8 @@ def underScale(actor, scale):
     transformFilter.SetTransform(transform)
 
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputData(transformFilter.GetOutput())
+    mapper.SetInputConnection(transformFilter.GetOutputPort())
+    mapper.Update()
     actor.SetMapper(mapper)
     return actor
 
@@ -319,38 +324,32 @@ def reduceMesh(actor, reduction):
     decimate.Update()
 
     decimateMapper = vtk.vtkPolyDataMapper()
-    decimateMapper.SetInputData(decimate.GetOutput())
+    decimateMapper.SetInputConnection(decimate.GetOutputPort())
+    decimateMapper.Update()
     actor.SetMapper(decimateMapper)
     return actor
 
 
 # Only for future versions of VTK, at the moment is a beta feature
-"""def save_obj(actor_list, dir, names):
-    exporter = vtk.vtkObjExporter()
+def save_obj(rw, dir, name):
+    exporter = vtk.vtkOBJExporter()
     if not os.path.isdir(dir):
         os.makedirs(dir)
-    if names is not None:
-        for actor, name in zip(actor_list, names):
-            path = "%s/%s.obj" % (dir, name)
-            exporter.SetFileName(path)
-            exporter.SetInput(actor.GetMapper().GetInput())
-            exporter.Write()
-    else:
-        for i, actor in enumerate(actor_list):
-            path = "%s/%d.obj" % (dir, i)
-            exporter.SetFileName(path)
-            exporter.SetInput(actor.GetMapper().GetInput())
-            exporter.Write()"""
+
+    path = "%s/%s" % (dir, name)
+    exporter.SetFilePrefix(path)
+    exporter.SetRenderWindow(rw)
+    exporter.Write()
 
 
-def save_stl(actor, dir, name):
+def save_stl(polydata, dir, name):
     exporter = vtk.vtkSTLWriter()
     if not os.path.isdir(dir):
         os.makedirs(dir)
 
     path = '%s/%s.stl' % (dir, name)
     exporter.SetFileName(path)
-    exporter.SetInputData(actor.GetMapper().GetInput())
+    exporter.SetInputData(polydata)
     exporter.Write()
 
 
@@ -369,33 +368,46 @@ def save_vrml(name, dir, rw):
 
 def initActorForExport(actor, rw, scale, reduction):
     ren = rw.GetRenderers().GetFirstRenderer()
-    ren.AddActor(reduceMesh(underScale(actor, scale), reduction))
+    actor = underScale(actor, scale)
+    actor = reduceMesh(actor, reduction)
+    ren.AddActor(actor)
 
-def toOriginalPos(actor, center,rotationTransform):
-    polyData = actor.GetMapper().GetInput()
-    centerTransform = vtk.vtkTransform()
-    centerTransform.Translate(-center[0], -center[1], -center[2])
+
+def toOriginalPos(actor, center, rotationTransform):
+    rotMat = vtk.vtkMatrix4x4()
+    rotationTransform.GetTranspose(rotMat)
+    rotTrans = vtk.vtkTransform()
+    rotTrans.SetMatrix(rotMat)
 
     transformFilter = vtk.vtkTransformFilter()
-    transformFilter.SetInputData(polyData)
+    transformFilter.SetInputData(actor.GetMapper().GetInput())
+    transformFilter.SetTransform(rotTrans)
+    transformFilter.Update()
+
+    mapper = vtk.vtkPolyDataMapper()
+    mapper.SetInputConnection(transformFilter.GetOutputPort())
+    mapper.Update()
+    actor.SetMapper(mapper)
+
+    centerTransform = vtk.vtkTransform()
+    centerTransform.Translate(center[0], center[1], center[2])
+
+    transformFilter = vtk.vtkTransformFilter()
+    transformFilter.SetInputData(actor.GetMapper().GetInput())
     transformFilter.SetTransform(centerTransform)
     transformFilter.Update()
 
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputData(transformFilter.GetOutput())
+    mapper.SetInputConnection(transformFilter.GetOutputPort())
+    mapper.Update()
     actor.SetMapper(mapper)
 
-    polyData = actor.GetMapper().GetInput()
-
-    transformFilter = vtk.vtkTransformFilter()
-    transformFilter.SetInputData(actor.GetMapper().GetInput())
-    transformFilter.SetTransform(rotationTransform)
-    transformFilter.Update()
-
-    mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputData(transformFilter.GetOutput())
-    actor.SetMapper(mapper)
-
+    centerCalculer = vtk.vtkCenterOfMass()
+    centerCalculer.SetInputData(actor.GetMapper().GetInput())
+    centerCalculer.SetUseScalarsAsWeights(False)
+    centerCalculer.Update()
+    center = centerCalculer.GetCenter()
+    print(center)
 
 
 def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduction=70, radius=RADIUS, combine=False):
@@ -442,7 +454,7 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
     actors.InitTraversal()
 
     rwExport = vtk.vtkRenderWindow()
-    rwExport.OffScreenRenderingOn()
+    # rwExport.OffScreenRenderingOn()
     renExport = vtk.vtkRenderer()
     rwExport.AddRenderer(renExport)
 
@@ -458,12 +470,15 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
     for i in range(ren.GetNumberOfPropsRendered()):
         sys.stdout.write("%d _" % i)
         actor = actors.GetNextActor()
+        polydata = actor.GetMapper().GetInput()
+        polydataCopy = vtk.vtkPolyData()
+        polydataCopy.DeepCopy(polydata)
         area_pre = compute_area(actor)
         centroid = actor.GetCenter()
         rescaled = False
         try:
             rw.Render()
-            (center,rotation) = axisAligment(actor)
+            (center, rotation) = axisAligment(actor)
             rw.Render()
             open_actor(actor, i, scale, radius)
 
@@ -488,23 +503,39 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
             csv += "%d,%f,%f,%f,%f,%f,%f\n" % tuple(data)
 
         if exportType != "None":
-            toOriginalPos(actor,center,rotation)
             initActorForExport(actor, rwExport, scale, reduction)
+            toOriginalPos(actor, center, rotation)
             if names_list is not None:
                 name = names_list[i]
             else:
                 name = i
 
             if exportType == "Stl":
-                save_stl(actor, os.path.splitext(input_filename)[0], str(name))
+                save_stl(actor.GetMapper().GetInput(), os.path.splitext(input_filename)[0], str(name) + "_R")
+                save_stl(polydataCopy, os.path.splitext(input_filename)[0], str(name) + "_O")
+                renExport.RemoveActor(actor)
             elif exportType == "Vrml":
-                save_vrml(str(name), os.path.splitext(input_filename)[0], rwExport)
-            """elif exportType == "Obj":
-                    print("-------- Saving obj files (This process might take a long time, please wait) -----------")
-                    save_obj(actors_list, os.path.splitext(input_filename)[0], names_list)"""
+                save_vrml(str(name) + "_R", os.path.splitext(input_filename)[0], rwExport)
+                renExport.RemoveActor(actor)
+                actorOld = vtk.vtkActor()
+                mapper = vtk.vtkPolyDataMapper()
+                mapper.SetInputData(polydataCopy)
+                actorOld.SetMapper(mapper)
+                renExport.AddActor(actorOld)
+                save_vrml(str(name) + "_O", os.path.splitext(input_filename)[0], rwExport)
+                renExport.RemoveActor(actorOld)
+            elif exportType == "Obj":
+                save_obj(rwExport, os.path.splitext(input_filename)[0], str(name) + "_R")
+                renExport.RemoveActor(actor)
+                actorOld = vtk.vtkActor()
+                mapper = vtk.vtkPolyDataMapper()
+                mapper.SetInputData(polydataCopy)
+                actorOld.SetMapper(mapper)
+                renExport.AddActor(actorOld)
+                save_obj(rwExport, os.path.splitext(input_filename)[0], str(name) + "_O")
+                renExport.RemoveActor(actorOld)
 
         ren.RemoveActor(actor)
-        renExport.RemoveActor(actor)
         if rescaled:
             scale /= 2
 

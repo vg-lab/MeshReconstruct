@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -33,6 +33,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setSpacing(6)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.gridLayout = QtWidgets.QGridLayout()
+        self.gridLayout.setContentsMargins(11, 11, 11, 11)
         self.gridLayout.setSpacing(6)
         self.gridLayout.setObjectName("gridLayout")
         self.one_vrml_button = QtWidgets.QPushButton(self.one_vrml_tab)
@@ -70,6 +71,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setSpacing(6)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.gridLayout_2 = QtWidgets.QGridLayout()
+        self.gridLayout_2.setContentsMargins(11, 11, 11, 11)
         self.gridLayout_2.setSpacing(6)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.many_vrml_input = QtWidgets.QLineEdit(self.many_vrml_tab)
@@ -102,6 +104,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setSpacing(6)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.gridLayout_3 = QtWidgets.QGridLayout()
+        self.gridLayout_3.setContentsMargins(11, 11, 11, 11)
         self.gridLayout_3.setSpacing(6)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.one_imx_button = QtWidgets.QPushButton(self.one_imx_tab)
@@ -134,6 +137,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setSpacing(6)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.gridLayout_4 = QtWidgets.QGridLayout()
+        self.gridLayout_4.setContentsMargins(11, 11, 11, 11)
         self.gridLayout_4.setSpacing(6)
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.many_imx_input = QtWidgets.QLineEdit(self.many_imx_tab)
@@ -161,13 +165,13 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.many_imx_tab, "")
         self.verticalLayout.addWidget(self.tabWidget)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setContentsMargins(-1, -1, 0, 0)
+        self.horizontalLayout_2.setContentsMargins(11, 11, 0, 0)
         self.horizontalLayout_2.setSpacing(6)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.formLayout = QtWidgets.QFormLayout()
         self.formLayout.setFieldGrowthPolicy(QtWidgets.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout.setFormAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.formLayout.setContentsMargins(-1, 0, -1, 0)
+        self.formLayout.setContentsMargins(11, 0, 11, 0)
         self.formLayout.setSpacing(6)
         self.formLayout.setObjectName("formLayout")
         self.outputFormatLabel = QtWidgets.QLabel(self.centralWidget)
@@ -180,6 +184,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.outputFormatComboBox.sizePolicy().hasHeightForWidth())
         self.outputFormatComboBox.setSizePolicy(sizePolicy)
         self.outputFormatComboBox.setObjectName("outputFormatComboBox")
+        self.outputFormatComboBox.addItem("")
         self.outputFormatComboBox.addItem("")
         self.outputFormatComboBox.addItem("")
         self.outputFormatComboBox.addItem("")
@@ -207,6 +212,7 @@ class Ui_MainWindow(object):
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.cleanVrmlCheckBox)
         self.horizontalLayout_2.addLayout(self.formLayout)
         self.formLayout_2 = QtWidgets.QFormLayout()
+        self.formLayout_2.setContentsMargins(11, 11, 11, 11)
         self.formLayout_2.setSpacing(6)
         self.formLayout_2.setObjectName("formLayout_2")
         self.precisionLabel = QtWidgets.QLabel(self.centralWidget)
@@ -287,8 +293,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.many_imx_tab), _translate("MainWindow", "Area from many IMXs"))
         self.outputFormatLabel.setText(_translate("MainWindow", "OutputFormat"))
         self.outputFormatComboBox.setItemText(0, _translate("MainWindow", "None"))
-        self.outputFormatComboBox.setItemText(1, _translate("MainWindow", "Stl"))
-        self.outputFormatComboBox.setItemText(2, _translate("MainWindow", "Vrml"))
+        self.outputFormatComboBox.setItemText(1, _translate("MainWindow", "Obj"))
+        self.outputFormatComboBox.setItemText(2, _translate("MainWindow", "Stl"))
+        self.outputFormatComboBox.setItemText(3, _translate("MainWindow", "Vrml"))
         self.exportResolutionLabel.setText(_translate("MainWindow", "OutputMeshResolutionPercentage"))
         self.cleanVrmlLabel.setText(_translate("MainWindow", "Clean Vrml"))
         self.precisionLabel.setText(_translate("MainWindow", "Precision"))

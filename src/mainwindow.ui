@@ -319,6 +319,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Obj</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Stl</string>
            </property>
           </item>
