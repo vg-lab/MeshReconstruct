@@ -16,6 +16,8 @@ class ComputeAreasParser(optparse.OptionParser):
                         help="The output areas file in csv", metavar="FILE")
         self.add_option("-v", "--input-vrml", dest="input_vrml",
                         help="The mesh to meassure in vrml file format", metavar="FILE")
+        self.add_option("-e", "--export-path", dest="export_path", help="path to save original and repaired meshes",
+                        metavar="FILE")
         self.add_option("-w", "--auto-vrml-dir", dest="vrmls_dir",
                         help="A directory with a bunch of vrmls", metavar="FILE")
         self.add_option("-i", "--input-imx", dest="input_imx",
@@ -34,7 +36,7 @@ class ComputeAreasParser(optparse.OptionParser):
 
         self.add_option("-f", "--fragments", dest="segments", help="repair segments", metavar="BOOLEAN")
 
-        self.add_option("-k", "--kernel-size",dest="kernelSize", help="Set kernel Size", metavar="INT")
+        self.add_option("-k", "--kernel-size", dest="kernelSize", help="Set kernel Size", metavar="INT")
 
         self.add_option("-c", "--cleanVrml", dest="cleanVrml", help="Set vrml cleaner", metavar="BOOLEAN")
 
@@ -70,7 +72,7 @@ def main(args=None):
                 vrmlFile = vrmlCleaned
             out_filename = os.path.join(options.output_dir, name + ".csv")
             print('*** ', name)
-            repair_mesh.main(vrmlFile, out_filename, precision, False, save, reduction,kernelSize)
+            repair_mesh.main(vrmlFile, out_filename, precision, False, options.export_path, save, reduction, kernelSize)
             if cleanVrml:
                 os.remove(vrmlCleaned)
     elif options.input_vrml:
@@ -83,7 +85,7 @@ def main(args=None):
             VrmlCleaner.clean(vrml, vrmlCleaned, segments)
             vrml = vrmlCleaned
 
-        repair_mesh.main(vrml, options.areas_file, precision, False, save, reduction,kernelSize)
+        repair_mesh.main(vrml, options.areas_file, precision, False, options.export_path, save, reduction, kernelSize)
         if cleanVrml:
             os.remove(vrml)
     elif options.imxs_dir:
@@ -92,14 +94,14 @@ def main(args=None):
             name = os.path.basename(imx).replace('.imx', '')
             out_filename = os.path.join(options.output_dir, name + ".csv")
             print('*** ', name)
-            repair_mesh.main(imx, out_filename, PRECISION, True, save, reduction,kernelSize)
+            repair_mesh.main(imx, out_filename, PRECISION, True, options.export_path, save, reduction, kernelSize)
 
     elif options.input_imx:
         print('*** ', options.input_imx)
-        repair_mesh.main(options.input_imx, options.areas_file, PRECISION, True, save, reduction,kernelSize)
+        repair_mesh.main(options.input_imx, options.areas_file, PRECISION, True, options.export_path, save, reduction, kernelSize)
 
     print("")
-    print ("---------------EXECUTION FINISHED---------------")
+    print("---------------EXECUTION FINISHED---------------")
 
 
 if __name__ == '__main__':

@@ -410,13 +410,22 @@ def toOriginalPos(actor, center, rotationTransform):
     print(center)
 
 
-def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduction=70, radius=RADIUS, combine=False):
+def main(input_filename, areas_filename, scale, is_imx, exportPath=None, exportType=False, reduction=70, radius=RADIUS,
+         combine=False):
     # TODO: The following doesn't hide the RenderWindow :/
     # factGraphics = vtk.vtkGraphicsFactory()
     # factGraphics.SetUseMesaClasses(1)
     # factImage = vtk.vtkImagingFactory()
     # factImage.SetUseMesaClasses(1)
 
+    if exportPath is None:
+        exportPath = os.path.splitext(input_filename)[0]
+    else:
+        filename = os.path.splitext(input_filename)[0]
+        pos = filename.rfind("/")
+        exportPath += filename[pos:]
+
+    print(exportPath)
     if is_imx:
         vrml_filename = os.path.splitext(input_filename)[0] + ".vrml"
         names_filename = os.path.splitext(input_filename)[0] + ".names"
@@ -511,28 +520,28 @@ def main(input_filename, areas_filename, scale, is_imx, exportType=False, reduct
                 name = i
 
             if exportType == "Stl":
-                save_stl(actor.GetMapper().GetInput(), os.path.splitext(input_filename)[0], str(name) + "_R")
-                save_stl(polydataCopy, os.path.splitext(input_filename)[0], str(name) + "_O")
+                save_stl(actor.GetMapper().GetInput(), exportPath, str(name) + "_R")
+                save_stl(polydataCopy, exportPath, str(name) + "_O")
                 renExport.RemoveActor(actor)
             elif exportType == "Vrml":
-                save_vrml(str(name) + "_R", os.path.splitext(input_filename)[0], rwExport)
+                save_vrml(str(name) + "_R", exportPath, rwExport)
                 renExport.RemoveActor(actor)
                 actorOld = vtk.vtkActor()
                 mapper = vtk.vtkPolyDataMapper()
                 mapper.SetInputData(polydataCopy)
                 actorOld.SetMapper(mapper)
                 renExport.AddActor(actorOld)
-                save_vrml(str(name) + "_O", os.path.splitext(input_filename)[0], rwExport)
+                save_vrml(str(name) + "_O", exportPath, rwExport)
                 renExport.RemoveActor(actorOld)
             elif exportType == "Obj":
-                save_obj(rwExport, os.path.splitext(input_filename)[0], str(name) + "_R")
+                save_obj(rwExport, exportPath, str(name) + "_R")
                 renExport.RemoveActor(actor)
                 actorOld = vtk.vtkActor()
                 mapper = vtk.vtkPolyDataMapper()
                 mapper.SetInputData(polydataCopy)
                 actorOld.SetMapper(mapper)
                 renExport.AddActor(actorOld)
-                save_obj(rwExport, os.path.splitext(input_filename)[0], str(name) + "_O")
+                save_obj(rwExport, exportPath, str(name) + "_O")
                 renExport.RemoveActor(actorOld)
 
         ren.RemoveActor(actor)
