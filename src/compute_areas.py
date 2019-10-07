@@ -62,21 +62,25 @@ def main(args=None):
 
     if options.vrmls_dir:
         vrmls = glob.glob(os.path.join(options.vrmls_dir, "*.vrml"))
+        vrmls += glob.glob(os.path.join(options.vrmls_dir, "*.imx"))
         for file in vrmls:
-            name = os.path.basename(file).replace('.vrml', '')
             ext = os.path.splitext(file)[1]
             dir = os.path.splitext(file)[0]
-            out_filename = os.path.join(options.output_dir, name + ".csv")
-            print('*** ', name)
             if ext == ".imx":
-                repair_mesh.main(file, out_filename, precision, True, options.export_path, save, reduction, kernelSize)
+                name = os.path.basename(file).replace('.imx', '')
+                out_filename = os.path.join(options.output_dir, name + ".csv")
+                print('*** ', name)
+                repair_mesh.main(file, out_filename, precision, True, out_filename, save, reduction, kernelSize)
             elif ext == ".vrml":
+                name = os.path.basename(file).replace('.vrml', '')
+                out_filename = os.path.join(options.output_dir, name + ".csv")
+                print('*** ', name)
                 vrmlFile = file
                 if cleanVrml:
                     vrmlCleaned = dir + "Cleaned.vrml"
                     VrmlCleaner.clean(file, vrmlCleaned, segments)
                     vrmlFile = vrmlCleaned
-                repair_mesh.main(vrmlFile, out_filename, precision, False, options.export_path, save, reduction, kernelSize)
+                repair_mesh.main(vrmlFile, out_filename, precision, False, out_filename, save, reduction, kernelSize)
                 if cleanVrml:
                     os.remove(vrmlCleaned)
     elif options.input_vrml:
