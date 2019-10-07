@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>543</width>
-    <height>277</height>
+    <height>309</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -33,11 +33,11 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="one_vrml_tab">
        <attribute name="title">
-        <string>Area from one VMRL</string>
+        <string>Area from one file</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -101,7 +101,7 @@
       </widget>
       <widget class="QWidget" name="many_vrml_tab">
        <attribute name="title">
-        <string>Area from many VMRLs</string>
+        <string>Area from many files</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
@@ -146,122 +146,6 @@
         </item>
         <item>
          <widget class="QPushButton" name="many_vrml_run_button">
-          <property name="text">
-           <string>Compute Areas</string>
-          </property>
-          <property name="icon">
-           <iconset theme="media-playback-start">
-            <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="one_imx_tab">
-       <attribute name="title">
-        <string>Area from one IMX</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="one_imx_button">
-            <property name="text">
-             <string>Open ...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="document-open">
-              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="one_imx_input">
-            <property name="placeholderText">
-             <string>input - IMX file</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="one_imx_csv_button">
-            <property name="text">
-             <string>Save ...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="document-save">
-              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="one_imx_csv_input">
-            <property name="placeholderText">
-             <string>output - CSV file </string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="one_imx_run_button">
-          <property name="text">
-           <string>Compute Areas</string>
-          </property>
-          <property name="icon">
-           <iconset theme="media-playback-start">
-            <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="many_imx_tab">
-       <attribute name="title">
-        <string>Area from many IMXs</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="many_imx_input">
-            <property name="placeholderText">
-             <string>Folder with many IMXs</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="many_imx_csv_input">
-            <property name="placeholderText">
-             <string>Folder to save many CSVs </string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="many_imx_button">
-            <property name="text">
-             <string>Open Folder...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="document-open">
-              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="many_imx_csv_button">
-            <property name="text">
-             <string>Save Folder...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="document-save">
-              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="many_imx_run_button">
           <property name="text">
            <string>Compute Areas</string>
           </property>
@@ -447,7 +331,7 @@
      <x>0</x>
      <y>0</y>
      <width>543</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

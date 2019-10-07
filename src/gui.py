@@ -13,7 +13,7 @@ import compute_areas
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self, parameters,*args):
+    def __init__(self, parameters, *args):
         super(MainWindow, self).__init__(*args)
         Ui_MainWindow.setupUi(self, self)
         self.last_dir = os.path.expanduser("~")
@@ -30,20 +30,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.cleanVrmlCheckBox.hide()
             self.cleanVrmlLabel.hide()
 
-
     def connect_signals(self):
-        self.one_vrml_button.clicked.connect(lambda: self.open_dialog(self.one_vrml_input, "*.vrml"))
+        self.one_vrml_button.clicked.connect(lambda: self.open_dialog(self.one_vrml_input, "*.vrml *.imx"))
         self.one_vrml_csv_button.clicked.connect(lambda: self.save_dialog(self.one_vrml_csv_input, "*.csv"))
         self.many_vrml_button.clicked.connect(lambda: self.open_dir_dialog(self.many_vrml_input))
         self.many_vrml_csv_button.clicked.connect(lambda: self.open_dir_dialog(self.many_vrml_csv_input))
         self.one_vrml_run_button.clicked.connect(lambda: self.run("one_vrml"))
         self.many_vrml_run_button.clicked.connect(lambda: self.run("many_vrml"))
-        self.one_imx_button.clicked.connect(lambda: self.open_dialog(self.one_imx_input, "*.imx"))
-        self.one_imx_csv_button.clicked.connect(lambda: self.save_dialog(self.one_imx_csv_input, "*.csv"))
-        self.many_imx_button.clicked.connect(lambda: self.open_dir_dialog(self.many_imx_input))
-        self.many_imx_csv_button.clicked.connect(lambda: self.open_dir_dialog(self.many_imx_csv_input))
-        self.one_imx_run_button.clicked.connect(lambda: self.run("one_imx"))
-        self.many_imx_run_button.clicked.connect(lambda: self.run("many_imx"))
 
     def run(self, kind):
         args = []
@@ -80,36 +73,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     "-k", "{}".format(self.kernelSizeSpinBox.value()),
                     "-c", "{}".format(self.cleanVrmlCheckBox.isChecked())]
 
-        if kind == "one_imx":
-            if not os.path.isfile(self.one_imx_input.text()):
-                self.one_imx_input.setFocus()
-                return
-            if self.one_imx_csv_input.text() == "":
-                self.one_imx_csv_input.setFocus()
-                return
-            args = ["-a", "{}".format(self.one_imx_csv_input.text()),
-                    "-i", "{}".format(self.one_imx_input.text()),
-                    "-s", "{}".format(self.outputFormatComboBox.currentText()),
-                    "-p", "{}".format(self.precisionSpinBox.value()),
-                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value()),
-                    "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
-                    "-k", "{}".format(self.kernelSizeSpinBox.value())]
-
-        if kind == "many_imx":
-            if not os.path.isdir(self.many_imx_input.text()):
-                self.many_imx_input.setFocus()
-                return
-            if not os.path.isdir(self.many_imx_csv_input.text()):
-                self.many_imx_csv_input.setFocus()
-                return
-            args = ["-o", "{}".format(self.many_imx_csv_input.text()),
-                    "-j", "{}".format(self.many_imx_input.text()),
-                    "-s", "{}".format(self.outputFormatComboBox.currentText()),
-                    "-p", "{}".format(self.precisionSpinBox.value()),
-                    "-r", "{}".format(self.exportReductionDoubleSpinBox.value()),
-                    "-f", "{}".format(self.includeSegmentsCheckBox.isChecked()),
-                    "-k", "{}".format(self.kernelSizeSpinBox.value())]
-
         print("python compute_areas.py " + " ".join(args))
 
         p = Process(target=compute_areas.main, args=[args])
@@ -132,19 +95,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def _handle_file_path(self, file_path):
         file = file_path[0]  # To unicode
-         # To latin-1 if needed
+        # To latin-1 if needed
         self.last_dir = os.path.dirname(file)
         return file
 
     def open_dialog(self, target, filter):
         file = QtWidgets.QFileDialog.getOpenFileName(self, "Open File",
-                                                 self.last_dir, filter)  # QtCore.QString
+                                                     self.last_dir, filter)  # QtCore.QString
         file = self._handle_file_path(file)
         target.setText(file)
 
     def save_dialog(self, target, filter):
         file = QtWidgets.QFileDialog.getSaveFileName(self, "Save File",
-                                                 self.last_dir, filter)  # QtCore.QString
+                                                     self.last_dir, filter)  # QtCore.QString
         file = self._handle_file_path(file)
         target.setText(file)
 
