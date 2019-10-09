@@ -414,9 +414,10 @@ def main(input_filename, areas_filename, scale, is_imx, exportPath=None, exportT
     # factImage.SetUseMesaClasses(1)
 
     if exportPath is None:
-        exportPath = os.path.splitext(input_filename)[0]
-        pos = exportPath.rfind("/")
-        exportPath = exportPath[:pos] + "/Meshes" + exportPath[pos:]
+        pos = areas_filename.rfind("/")
+        filename = os.path.splitext(input_filename)[0]
+        posFilename = filename.rfind("/")
+        exportPath = areas_filename[:pos] + "/Meshes" + filename[posFilename:]
     else:
         filename = os.path.splitext(input_filename)[0]
         pos = filename.rfind("/")
