@@ -1,17 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from multiprocessing import Process
-
-import vtk
-import sys
-import os
-import optparse
-import glob
 import numpy as np
-import math
-import time
-
+import optparse
+import os
 import re
+import sys
+import vtk
+from multiprocessing import Process
 
 import parse_imx
 
@@ -420,6 +415,8 @@ def main(input_filename, areas_filename, scale, is_imx, exportPath=None, exportT
 
     if exportPath is None:
         exportPath = os.path.splitext(input_filename)[0]
+        pos = exportPath.rfind("/")
+        exportPath = exportPath[:pos] + "/Meshes" + exportPath[pos:]
     else:
         filename = os.path.splitext(input_filename)[0]
         pos = filename.rfind("/")
