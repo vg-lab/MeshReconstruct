@@ -421,6 +421,9 @@ def main(input_filename, areas_filename, scale, is_imx, exportPath=None, exportT
     else:
         filename = os.path.splitext(input_filename)[0]
         pos = filename.rfind("/")
+        if pos == -1:
+            exportPath += "/"
+
         exportPath += filename[pos:]
 
     print(exportPath)
