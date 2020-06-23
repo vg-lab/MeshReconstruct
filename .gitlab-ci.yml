@@ -4,6 +4,7 @@ stages:
 Ubuntu-subproject-master:
   stage: build
   script:
+  - export NO_BUILD=""
   - export GITHUB_MIRROR_URL="git@github.com:vg-lab/MeshReconstruct"
   - bash .gitlab-ci.sh
   tags:
