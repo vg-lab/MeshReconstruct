@@ -94,8 +94,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             QtWidgets.QApplication.restoreOverrideCursor()
 
     def _handle_file_path(self, file_path):
-        file = file_path  # To unicode
-        # To latin-1 if needed
+        if type(file_path) is tuple:
+            file = file_path[0]
+        else:
+            file = file_path
+
         self.last_dir = os.path.dirname(file)
         return file
 
