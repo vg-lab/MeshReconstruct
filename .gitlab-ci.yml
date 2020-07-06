@@ -1,0 +1,15 @@
+stages:
+  - build
+
+Ubuntu-subproject-master:
+  stage: build
+  script:
+  - export SKIP_CMAKE_BUILD="ON"
+  - export GITHUB_MIRROR_URL="git@github.com:vg-lab/MeshReconstruct"
+  - bash .gitlab-ci.sh
+  tags:
+  - ubuntu
+  only:
+  - master
+
+

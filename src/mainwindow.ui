@@ -6,15 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
-    <height>212</height>
+    <width>543</width>
+    <height>309</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>AreasCBB</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="bottomMargin">
+     <number>9</number>
+    </property>
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -22,18 +37,25 @@
       </property>
       <widget class="QWidget" name="one_vrml_tab">
        <attribute name="title">
-        <string>Area from one VMRL</string>
+        <string>Area from one file</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <layout class="QGridLayout" name="gridLayout">
           <item row="0" column="0">
            <widget class="QPushButton" name="one_vrml_button">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Open ...</string>
             </property>
             <property name="icon">
-             <iconset theme="document-open"/>
+             <iconset theme="document-open">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
             </property>
            </widget>
           </item>
@@ -50,7 +72,8 @@
              <string>Save ...</string>
             </property>
             <property name="icon">
-             <iconset theme="document-save"/>
+             <iconset theme="document-save">
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
             </property>
            </widget>
           </item>
@@ -69,7 +92,8 @@
            <string>Compute Areas</string>
           </property>
           <property name="icon">
-           <iconset theme="media-playback-start"/>
+           <iconset theme="media-playback-start">
+            <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
           </property>
          </widget>
         </item>
@@ -77,7 +101,7 @@
       </widget>
       <widget class="QWidget" name="many_vrml_tab">
        <attribute name="title">
-        <string>Area from many VMRLs</string>
+        <string>Area from many files</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
@@ -90,7 +114,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="many_csv_input">
+           <widget class="QLineEdit" name="many_vrml_csv_input">
             <property name="placeholderText">
              <string>Folder to save many CSVs </string>
             </property>
@@ -103,8 +127,7 @@
             </property>
             <property name="icon">
              <iconset theme="document-open">
-              <normaloff/>
-             </iconset>
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
             </property>
            </widget>
           </item>
@@ -115,8 +138,7 @@
             </property>
             <property name="icon">
              <iconset theme="document-save">
-              <normaloff/>
-             </iconset>
+              <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
             </property>
            </widget>
           </item>
@@ -128,127 +150,177 @@
            <string>Compute Areas</string>
           </property>
           <property name="icon">
-           <iconset theme="media-playback-start"/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="one_imx_tab">
-       <attribute name="title">
-        <string>Area from one IMX</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="one_imx_button">
-            <property name="text">
-             <string>Open ...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="document-open"/>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="one_imx_input">
-            <property name="placeholderText">
-             <string>input - IMX file</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="one_imx_csv_button">
-            <property name="text">
-             <string>Save ...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="document-save"/>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="one_imx_csv_input">
-            <property name="placeholderText">
-             <string>output - CSV file </string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="one_imx_run_button">
-          <property name="text">
-           <string>Compute Areas</string>
-          </property>
-          <property name="icon">
-           <iconset theme="media-playback-start"/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="many_imx_tab">
-       <attribute name="title">
-        <string>Area from many IMXs</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="many_imx_input">
-            <property name="placeholderText">
-             <string>Folder with many IMXs</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="many_imx_csv_input">
-            <property name="placeholderText">
-             <string>Folder to save many CSVs </string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="many_imx_button">
-            <property name="text">
-             <string>Open Folder...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="document-open">
-              <normaloff/>
-             </iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="many_imx_csv_button">
-            <property name="text">
-             <string>Save Folder...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="document-save">
-              <normaloff/>
-             </iconset>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="many_run_button">
-          <property name="text">
-           <string>Compute Areas</string>
-          </property>
-          <property name="icon">
-           <iconset theme="media-playback-start"/>
+           <iconset theme="media-playback-start">
+            <normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</normaloff>../trabajo/Mesh Reconstruct data/MeshReconstruct/src</iconset>
           </property>
          </widget>
         </item>
        </layout>
       </widget>
      </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QFormLayout" name="formLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+        <property name="formAlignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="outputFormatLabel">
+          <property name="text">
+           <string>OutputFormat</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="outputFormatComboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Obj</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Stl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Vrml</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="exportResolutionLabel">
+          <property name="text">
+           <string>OutputMeshResolutionPercentage</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="exportReductionDoubleSpinBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimum">
+           <double>10.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>30.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="cleanVrmlLabel">
+          <property name="text">
+           <string>Clean Vrml</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="cleanVrmlCheckBox">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="precisionLabel">
+          <property name="text">
+           <string>Precision</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="precisionSpinBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="includeSegmentsLabel">
+          <property name="text">
+           <string>Include Segments</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QCheckBox" name="includeSegmentsCheckBox"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="kernelSizeLabel">
+          <property name="text">
+           <string>KernelSize</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="kernelSizeSpinBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="value">
+           <number>3</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -258,8 +330,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>418</width>
-     <height>25</height>
+     <width>543</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
