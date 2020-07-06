@@ -8,7 +8,7 @@ echo.
 echo.
 echo --------------------------------------------------------------
 echo ERROR: conda is not working or you have no internet connection
-echo    * Maybe you need to install miniconda Python2.7:
+echo    * Maybe you need to install miniconda Python3.7:
 echo           http://conda.pydata.org/miniconda.html 
 echo --------------------------------------------------------------
 echo.
